@@ -19,6 +19,9 @@ export default function Layout({ children }: LayoutProps) {
             <Link href="/enhanced_code" className="px-4 py-2">
               Enhanced Code
             </Link>
+            <Link href="/translate_code" className="px-4 py-2">
+              Translate Code
+            </Link>
           </nav>
         </div>
       </header>

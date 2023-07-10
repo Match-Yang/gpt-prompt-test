@@ -6,7 +6,7 @@
   "author": "Mayooear<twitter:@mayowaoshin>",
   "type": "module",
   "scripts": {
-    "dev": "next dev -p 4008",
+    "dev": "next dev -p 10086",
     "build": "next build",
     "start": "next start -p 4008",
     "type-check": "tsc --noEmit",
