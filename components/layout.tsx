@@ -22,6 +22,9 @@ export default function Layout({ children }: LayoutProps) {
             <Link href="/translate_code" className="px-4 py-2">
               Translate Code
             </Link>
+            <Link href="/code_to_doc" className="px-4 py-2">
+              Code to Doc
+            </Link>
           </nav>
         </div>
       </header>
