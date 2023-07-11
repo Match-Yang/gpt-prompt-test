@@ -1,7 +1,7 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, SetStateAction } from 'react';
 import styles from '@/styles/TranslateCode.module.css';
 import LoadingDots from '@/components/ui/LoadingDots';
-import Dropdown from '@/components/ui/DropDown';
+import Dropdown from '@/components/ui/Dropdown';
 
 const PROGRAMMING_LANGUAGES = [
     "Python",
@@ -18,7 +18,18 @@ const PROGRAMMING_LANGUAGES = [
     "Rust",
     "SQL",
     "Ruby",
-    "Perl"
+    "Perl",
+    "React",
+    "Vue",
+    "Angular",
+    "Svelte",
+    "Qt",
+    "Electron",
+    "Flutter",
+    "JavaFX",
+    "wxWidgets",
+    "GTK",
+    "NodeJS"
 ]
 
 export default function TranslateCode() {
@@ -26,7 +37,7 @@ export default function TranslateCode() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [answer, setAnswer] = useState<string>('');
-    const [targetLanguage, setTargetLanguage] = useState<string>('');
+    const [targetLanguage, setTargetLanguage] = useState<string>('Python');
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -35,8 +46,7 @@ export default function TranslateCode() {
     }, []);
 
     //handle form submission
-    async function handleSubmit(e: any) {
-        e.preventDefault();
+    async function handleSubmit() {
 
         setError(null);
 
@@ -50,13 +60,14 @@ export default function TranslateCode() {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/enhanced_code', {
+            const response = await fetch('/api/translate_code', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    content
+                    content,
+                    programming_language: targetLanguage,
                 }),
             });
             const data = await response.json();
@@ -109,10 +120,11 @@ export default function TranslateCode() {
                         <Dropdown
                             className={styles.language_options}
                             options={PROGRAMMING_LANGUAGES}
-                            onOptionChange={(option) => { setTargetLanguage(option) }} />
+                            onOptionChange={(option: string) => { setTargetLanguage(option) }} />
 
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={handleSubmit}
                             disabled={loading}
                             className={styles.generatebutton}
                         >

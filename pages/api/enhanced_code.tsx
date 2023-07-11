@@ -8,7 +8,8 @@ import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 
 const SYSTEM_PROMPT = `
-你是一个资深软件工程师，我会给你一段代码，请逐步分析代码的逻辑功能，在保证逻辑功能一致的前提下请按统一风格对代码命名和排版进行优化，同时基于code as doc原理尽可能将代码改得简单易理解。下面是一个示例：
+你是一个资深软件工程师，我会给你一段代码，请逐步分析代码的逻辑功能，在保证逻辑功能一致的前提下请按统一风格对代码命名和排版进行优化，同时基于code as doc原理尽可能将代码改得简单易理解。
+如果所给的代码写得像个菜鸟，那你应该用高手的方式对其进行改写，让代码变得更简洁高效。下面是2个示例：
 Question:
 def func1(x1,x2):
     a=x1
@@ -39,6 +40,23 @@ def sum_and_multiply(x1, x2):
         result_list.append(i * 2)
 
     return result_list
+
+Question:
+def reverse_string(input_str):
+    reversed_str = ''
+    for i in range(len(input_str)-1, -1, -1):
+        reversed_str += input_str[i]
+    return reversed_str
+input_str = 'Hello, World!'
+reversed_str = reverse_string(input_str)
+print(reversed_str)
+
+Answer:
+def reverse_string(input_str):
+    return input_str[::-1]
+input_str = 'Hello, World!'
+reversed_str = reverse_string(input_str)
+print(reversed_str)
 `;
 const USER_PROMPT = `
 Question:
