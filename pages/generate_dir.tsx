@@ -3,53 +3,20 @@ import styles from '@/styles/TranslateCode.module.css';
 import LoadingDots from '@/components/ui/LoadingDots';
 import Dropdown from '@/components/ui/Dropdown';
 
-const LANGUAGES = [
-    "English",
-    "中文",
-]
-const PROGRAMMING_LANGUAGES = [
-    "",
-    "Python",
-    "JavaScript",
-    "Java",
-    "C++",
-    "C#",
-    "PHP",
-    "TypeScript",
-    "Swift",
-    "Objective-C",
-    "Go",
-    "Kotlin",
-    "Rust",
-    "SQL",
-    "Ruby",
-    "Perl",
-    "React",
-    "Vue",
-    "Angular",
-    "Svelte",
-    "Qt",
-    "Electron",
-    "Flutter",
-    "JavaFX",
-    "wxWidgets",
-    "GTK",
-    "NodeJS"
+const DOCTYPES = [
+    "Development documentation",
+    "Product documentation",
+    "User guide",
+    "Others"
 ]
 
-const CODE_TYPE = [
-    "class/interface",
-    "method/callback"
-]
-
-export default function TranslateCode() {
-    const [query, setQuery] = useState<string>('');
+export default function GenerateDir() {
+    const [targetReaderType, setTargetReaderType] = useState<string>('beginner developer');
+    const [docDes, setDocDes] = useState<string>('payment SDK introduction');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [answer, setAnswer] = useState<string>('');
-    const [targetLanguage, setTargetLanguage] = useState<string>('English');
-    const [programmingLanguage, setProgrammingLanguage] = useState<string>('');
-    const [codeType, setCodeType] = useState<string>('class/interface');
+    const [docType, setDocType] = useState<string>('Development documentation');
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -62,26 +29,18 @@ export default function TranslateCode() {
 
         setError(null);
 
-        if (!query) {
-            alert('Please input a question');
-            return;
-        }
-
-        const content = query.trim();
-
         setLoading(true);
 
         try {
-            const response = await fetch('/api/code_to_doc', {
+            const response = await fetch('/api/generate_dir', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    content,
-                    language: targetLanguage,
-                    programmingLanguage,
-                    codeType,
+                    doc_type: docType,
+                    target_reader_type: targetReaderType.trim(),
+                    doc_desc: docDes.trim(),
                 }),
             });
             const data = await response.json();
@@ -105,50 +64,52 @@ export default function TranslateCode() {
         <>
             <div className="mx-auto flex flex-col gap-4">
                 <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
-                    Code to Doc
+                    Translate Code
                 </h1>
                 <main className={styles.main}>
                     <div className={styles.center}>
-                        <div className={styles.cloudform}>
-                            <form onSubmit={handleSubmit} className={styles.cloudform}>
-                                <textarea
-                                    disabled={loading}
-                                    // onKeyDown={handleEnter}
-                                    ref={textAreaRef}
-                                    autoFocus={false}
-                                    id="userInput"
-                                    name="userInput"
-                                    placeholder={
-                                        loading
-                                            ? 'Waiting for response...'
-                                            : 'What is the code?'
-                                    }
-                                    value={query}
-                                    onChange={(e) => setQuery(e.target.value)}
-                                    className={styles.textarea}
-                                />
-                            </form>
+                        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column',  }}>
+                            <Dropdown
+                                className={styles.language_options}
+                                options={DOCTYPES}
+                                onOptionChange={(option: string) => { setDocType(option) }} />
+                            <textarea
+                                // disabled={loading}
+                                // ref={textAreaRef}
+                                autoFocus={false}
+                                id="targetReaderType"
+                                name="targetReaderType"
+                                placeholder={
+                                    loading
+                                        ? 'Waiting for response...'
+                                        : 'Target reader type?'
+                                }
+                                defaultValue={targetReaderType}
+                                onChange={(e) => setTargetReaderType(e.target.value)}
+                                style={{ width: '100%', height: '100px' }}
+                            />
+                            <textarea
+                                // disabled={loading}
+                                // ref={textAreaRef}
+                                autoFocus={false}
+                                id="targetReaderType"
+                                name="targetReaderType"
+                                placeholder={
+                                    loading
+                                        ? 'Waiting for response...'
+                                        : 'Doc Des'
+                                }
+                                defaultValue={docDes}
+                                onChange={(e) => setDocDes(e.target.value)}
+                                style={{ width: '100%', height: '100px' }}
+                            />
                         </div>
-                    </div>
-                    <div className={styles.options_section}>
-                        <Dropdown
-                            className={styles.language_options}
-                            options={LANGUAGES}
-                            onOptionChange={(option: string) => { setTargetLanguage(option) }} />
-                        <Dropdown
-                            className={styles.language_options}
-                            options={PROGRAMMING_LANGUAGES}
-                            onOptionChange={(option: string) => { setProgrammingLanguage(option) }} />
-                        <Dropdown
-                            className={styles.language_options}
-                            options={CODE_TYPE}
-                            onOptionChange={(option: string) => { setCodeType(option) }} />
 
                         <button
                             type="button"
                             onClick={handleSubmit}
                             disabled={loading}
-                            className={styles.generatebutton}
+                            style={{ width: '50px', height: '50px' }}
                         >
                             {loading ? (
                                 <div className={styles.loadingwheel}>
