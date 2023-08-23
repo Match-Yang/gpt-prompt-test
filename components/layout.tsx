@@ -26,7 +26,10 @@ export default function Layout({ children }: LayoutProps) {
               Code to Doc
             </Link>
             <Link href="/generate_dir" className="px-4 py-2">
-              Generate Dir
+              Dir
+            </Link>
+            <Link href="/generate_outline" className="px-4 py-2">
+              Outline
             </Link>
           </nav>
         </div>

@@ -6,7 +6,7 @@ Question:
 The document's topic is [Payment SDK Introduction], the document type is [Development Documentation], and it is targeted towards [Beginner Developers].
 
 Answer:
-{{"title": "Introduction","type": "folder","key": "Introduction","children": [{{"title": "Getting Started","type": "file","key": "Introduction/Getting Started","children": []}}]}}
+{{"name": "Introduction","type": "folder","path": "Introduction","toc": [{{"name": "Getting Started","type": "file","path": "Introduction/Getting Started","toc": []}}]}}
 
 Question: 
 The document's topic is [{doc_desc}], the document type is [{doc_type}], and it is targeted towards [{target_reader_type}].
