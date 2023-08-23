@@ -9,14 +9,12 @@ import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { SystemChatMessage } from "langchain/schema";
 
-const SYSTEM_PROMPT = `
-`;
+const SYSTEM_PROMPT = ``;
 const USER_PROMPT = `
 You are a professional documentation engineer, and your task is to create a documentation website. I will provide you with a brief description of the document's topic, its type, and the intended audience.
 Please generate a directory tree suitable for this documentation website based on the given information. Generate the directory tree according to the specific details, providing as much detail as possible. The directory tree should have a minimum of two levels and a maximum of three levels, with the final level being the files. Please include at least three top-level directories. All names should be in English.
 Return the result to me in JSON format. Here is an example of the JSON format:
 
-问题:
 Question:
 The document's topic is [Payment SDK Introduction], the document type is [Development Documentation], and it is targeted towards [Beginner Developers].
 
@@ -41,6 +39,12 @@ The document's topic is [{doc_desc}], the document type is [{doc_type}], and it 
 
 Answer:
 `
+
+async function readPromptFromGithub(key: string) {
+    const response = await fetch('https://raw.githubusercontent.com/Match-Yang/gpt-prompt-test/main/prompt.json');
+    const data = await response.json();
+    return data[key];
+}
 
 export default async function handler(
     req: NextApiRequest,
