@@ -8,6 +8,7 @@ import {
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { SystemChatMessage } from "langchain/schema";
+import  { readPromptFromGithub } from "utils/prompt_helper"
 
 const SYSTEM_PROMPT = ``;
 const USER_PROMPT = `
@@ -39,11 +40,6 @@ The document's topic is [{doc_desc}], the document type is [{doc_type}], and it 
 
 Answer:
 `
-async function readPromptFromGithub(key: string) {
-    const response = await fetch('https://raw.githubusercontent.com/Match-Yang/gpt-prompt-test/main/prompt.json');
-    const data = await response.json();
-    return data[key];
-}
 
 export default async function handler(
     req: NextApiRequest,
@@ -61,8 +57,9 @@ export default async function handler(
         // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
         const chat = new ChatOpenAI({ temperature: 0.5 });
 
+        const userPrompt = await readPromptFromGithub("generate_dir")
         const chatPrompt = new PromptTemplate({
-            template: USER_PROMPT,
+            template: userPrompt,
             inputVariables: ["doc_desc", "doc_type", "target_reader_type"],
           });
         const chainB = new LLMChain({

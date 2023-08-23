@@ -25,6 +25,9 @@ export default function Layout({ children }: LayoutProps) {
             <Link href="/code_to_doc" className="px-4 py-2">
               Code to Doc
             </Link>
+            <Link href="/generate_dir" className="px-4 py-2">
+              Generate Dir
+            </Link>
           </nav>
         </div>
       </header>
