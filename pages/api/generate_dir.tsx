@@ -39,7 +39,6 @@ The document's topic is [{doc_desc}], the document type is [{doc_type}], and it 
 
 Answer:
 `
-
 async function readPromptFromGithub(key: string) {
     const response = await fetch('https://raw.githubusercontent.com/Match-Yang/gpt-prompt-test/main/prompt.json');
     const data = await response.json();
@@ -51,7 +50,6 @@ export default async function handler(
     res: NextApiResponse,
 ) {
     const { doc_desc, doc_type, target_reader_type } = req.body;
-
 
     //only accept post requests
     if (req.method !== 'POST') {
