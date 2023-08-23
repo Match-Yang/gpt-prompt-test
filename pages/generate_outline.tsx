@@ -38,7 +38,7 @@ export default function GenerateDir() {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/generate_dir', {
+            const response = await fetch('/api/generate_outline', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
