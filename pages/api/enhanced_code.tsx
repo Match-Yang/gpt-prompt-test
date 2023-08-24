@@ -6,7 +6,6 @@ import {
 } from "langchain/prompts";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import readPromptFromGithub from "utils/prompt_helper"
 
 const SYSTEM_PROMPT = `
 You are a seasoned software engineer. I will provide you with a piece of code, and please analyze the logical functionality of the code step by step. While ensuring consistent logical functionality, please optimize the code naming and formatting in a unified style. Additionally, based on the principle of "code as documentation," simplify the code as much as possible for better understanding.
@@ -89,8 +88,6 @@ export default async function handler(
   if (!content) {
     return res.status(400).json({ message: 'No content in the request' });
   }
-  // OpenAI recommends replacing newlines with spaces for best results
-  const sanitizedContent = content.trim().replaceAll('\n', ' ');
 
   try {
     // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
@@ -104,9 +101,11 @@ export default async function handler(
       llm: chat,
     });
 
+    console.log("Begin call chanin......")
     const response = await chainB.call({
-      original_code: sanitizedContent,
+      original_code: content,
     });
+    console.log("End call chanin......")
 
     console.log('response', response);
     res.status(200).json(response);
