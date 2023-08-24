@@ -7,44 +7,44 @@ import {
 } from "langchain/prompts";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import readPromptFromGithub from "utils/prompt_helper"
 
 const CLASS_PROMPT = `
-你是一个资深文档工程师，请为这段代码写一篇接口文档。文档需要包含代码里涉及的所有类、接口、结构体、枚举、方法、属性等。
-文档用Markdown格式来写，需要美观大方。所有标题必须以 # 号开头，比如 # MyClass；不要使用有序列表来列举平级的属性和方法名等。
+You are a seasoned documentation engineer. Please write an interface document for the given code. The document should include all the classes, interfaces, structs, enums, methods, and properties involved in the code. The document should be written in Markdown format and should be aesthetically pleasing. All headings must start with the "#" symbol, such as "# MyClass". Please do not use ordered lists to list properties and method names at the same level.
 
-如果是C++、Java、Kotlin、OC、C#、TypeScript、Python这类面相对象语言，请按照下面大纲和要求生成文档
-如果代码是完整的类或者接口，必须包含如下大纲：
-Table of Contents（目录树，只包含大纲）
-Introduction（对这个类或者接口的功能总结描述）
-Public Methods（这个类或者接口的所有 public 访问域的方法）
-Private Methods（这个类或者接口的所有 private 访问域的方法）
-Deprecated Methods（这个类或者接口中被标志为弃用的方法）
-Public Members（这个类或者接口所有对外能访问的属性）
+If it is an object-oriented language like C++, Java, Kotlin, Objective-C, C#, TypeScript, or Python, please generate the document according to the following outline and requirements.
 
-所有属性和参数的说明必须说明类型，必须用表格来说明。
-所有大纲标题用二级标题表示（##），所有方法名用三级标题表示（###）。
-所有方法必须包含方法原型代码块。
+If the code represents a complete class or interface, it must include the following outline:
 
-如果代码只是一个类或者接口的其中一个方法，那么该方法的文档需要按以下要求编写：
-文档只包含方法说明。方法说明按方法名、方法原型、方法描述、参数说明、返回值这样的顺序编写。方法名使用三级标题（###）表示，方法原型使用三个连续的backtick包裹起来。所有参数的说明必须说明类型，必须用表格来说明。
+Table of Contents (tree structure, only includes the outline)
+Introduction (a summary description of the functionality of the class or interface)
+Public Methods (all public-access methods of this class or interface)
+Private Methods (all private-access methods of this class or interface)
+Deprecated Methods (methods marked as deprecated in this class or interface)
+Public Members (all accessible properties of this class or interface)
 
-文档所有属性名都用两个backtick括起来。如果是多行代码则用三个backtick括起来。
+All property and parameter descriptions must include the type and should be presented in a table format.
+All outline headings should be represented as second-level headings (##), and all method names should be represented as third-level headings (###).
+All methods must include a code block for the method prototype.
 
-Question: 这是一段 {programming_language} 代码，请用 {language} 为下面代码写一篇接口文档
+If the code represents only one method of a class or interface, the documentation for that method should be written according to the following requirements:
+The documentation should only include the method description. The method description should be written in the following order: method name, method prototype, method description, parameter description, return value. The method name should be represented as a third-level heading (###), and the method prototype should be enclosed in three consecutive backticks. All parameter descriptions must include the type and should be presented in a table format.
+
+All property names in the document should be enclosed in double backticks. If it is a multi-line code, it should be enclosed in three backticks.
+
+Question: This is a {programming_language} code. Please write an interface document for the code below using {language}.
 {code}
 
 Answer:
 `
 const METHOD_PROMPT = `
-你是一个资深文档工程师，请为这段代码写一篇接口文档。
-文档用Markdown格式来写，需要美观大方。方法名使用三级标题（###）表示，方法原型使用三个连续的backtick包裹起来。所有参数的说明必须说明类型，必须用表格来说明。
-方法必须包含方法原型代码块。
-方法说明按方法名、方法原型、方法描述、参数说明、返回值这样的顺序编写。
+You are a senior documentation engineer. Please write an interface document for the given code.
+The document should be written in Markdown format and should be aesthetically pleasing. Method names should be represented as third-level headings (###), and the method prototypes should be enclosed in three consecutive backticks. All parameter descriptions must include the type and should be presented in a table format.
+Methods must include a code block for the method prototype.
+The method descriptions should be written in the following order: method name, method prototype, method description, parameter description, return value.
 
-文档所有属性名都用两个backtick括起来。如果是多行代码则用三个backtick括起来。
+All property names in the document should be enclosed in double backticks. If it is a multi-line code, it should be enclosed in three backticks.
 
-Question: 这是一段 {programming_language} 代码，请用 {language} 为下面代码写一篇接口文档
+Question: This is a {programming_language} code. Please write an interface document for the code below using {language}.
 {code}
 
 Answer:
@@ -79,9 +79,7 @@ export default async function handler(
     // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
     const chat = new ChatOpenAI({ temperature: 0, modelName: gptModelName });
 
-    const classPrompt = await readPromptFromGithub('code_to_doc_class');
-    const methodPrompt = await readPromptFromGithub('code_to_doc_method');
-    const promptStr = codeType === 'class/interface' ? classPrompt : methodPrompt;
+    const promptStr = codeType === 'class/interface' ? CLASS_PROMPT : METHOD_PROMPT;
     const chatPrompt = new PromptTemplate({
       template: promptStr,
       inputVariables: ["language", "code", "programming_language"],

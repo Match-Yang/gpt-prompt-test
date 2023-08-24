@@ -9,8 +9,9 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import readPromptFromGithub from "utils/prompt_helper"
 
 const SYSTEM_PROMPT = `
-你是一个资深软件工程师，我会给你一段代码，请逐步分析代码的逻辑功能，在保证逻辑功能一致的前提下请按统一风格对代码命名和排版进行优化，同时基于code as doc原理尽可能将代码改得简单易理解。
-如果所给的代码写得像个菜鸟，那你应该用高手的方式对其进行改写，让代码变得更简洁高效。下面是2个示例：
+You are a seasoned software engineer. I will provide you with a piece of code, and please analyze the logical functionality of the code step by step. While ensuring consistent logical functionality, please optimize the code naming and formatting in a unified style. Additionally, based on the principle of "code as documentation," simplify the code as much as possible for better understanding.
+If the given code is written poorly, you should rewrite it in an expert manner to make the code more concise and efficient.Please summarize the modifications you made in one sentence. Here are two examples:
+
 Question:
 def func1(x1,x2):
     a=x1
@@ -41,6 +42,8 @@ def sum_and_multiply(x1, x2):
         result_list.append(i * 2)
 
     return result_list
+-----spreading-----
+Optimized method and variable names for improved readability.
 
 Question:
 def reverse_string(input_str):
@@ -58,6 +61,9 @@ def reverse_string(input_str):
 input_str = 'Hello, World!'
 reversed_str = reverse_string(input_str)
 print(reversed_str)
+-----spreading-----
+Rewrote the implementation of reverse_string using a more concise and efficient syntax.
+
 `;
 const USER_PROMPT = `
 Question:
@@ -87,13 +93,11 @@ export default async function handler(
   const sanitizedContent = content.trim().replaceAll('\n', ' ');
 
   try {
-    const systemPrompt = await readPromptFromGithub('enchanced_code_system');
-    const userPrompt = await readPromptFromGithub('enchanced_code_user');
     // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
     const chat = new ChatOpenAI({ temperature: 0 });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(systemPrompt),
-      HumanMessagePromptTemplate.fromTemplate(userPrompt),
+      SystemMessagePromptTemplate.fromTemplate(SYSTEM_PROMPT),
+      HumanMessagePromptTemplate.fromTemplate(USER_PROMPT),
     ]);
     const chainB = new LLMChain({
       prompt: chatPrompt,
