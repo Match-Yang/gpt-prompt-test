@@ -104,9 +104,6 @@ export default function TranslateCode() {
     return (
         <>
             <div className="mx-auto flex flex-col gap-4">
-                <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
-                    Code to Doc
-                </h1>
                 <main className={styles.main}>
                     <div className={styles.center}>
                         <div className={styles.cloudform}>

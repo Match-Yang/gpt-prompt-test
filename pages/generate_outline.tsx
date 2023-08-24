@@ -69,9 +69,6 @@ export default function GenerateDir() {
     return (
         <>
             <div className="mx-auto flex flex-col gap-4">
-                <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
-                    Generate Outline
-                </h1>
                 <main className={styles.main}>
                     <div className={styles.center}>
                         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', }}>

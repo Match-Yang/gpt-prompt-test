@@ -30,7 +30,7 @@ export default async function handler(
 
     try {
         // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
-        const chat = new ChatOpenAI({ temperature: 0.5 });
+        const chat = new ChatOpenAI({ temperature: 0.5, modelName: 'gpt-3.5-turbo' });
 
         const chatPrompt = new PromptTemplate({
             template: USER_PROMPT,
