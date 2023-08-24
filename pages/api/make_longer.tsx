@@ -8,7 +8,7 @@ import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 
 const USER_PROMPT = `
-As a professional tech writer, your task is to review the following text and revise it to be longer for more details without changing its meaning and tone. Please ensure that the character count of the result is approximately 1.5 times the length of the original content.
+As a professional tech writer, your task is to review the following text and revise it to be longer for more details without changing its meaning and tone. 答案长度不能超过3000个字符.
 
 Content: 
 {content}
