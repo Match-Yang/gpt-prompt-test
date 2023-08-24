@@ -7,7 +7,7 @@ import {
 } from "langchain/prompts";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import { SystemChatMessage } from "langchain/schema";
+import readPromptFromGithub from "utils/prompt_helper"
 
 const CLASS_PROMPT = `
 你是一个资深文档工程师，请为这段代码写一篇接口文档。文档需要包含代码里涉及的所有类、接口、结构体、枚举、方法、属性等。
@@ -79,7 +79,9 @@ export default async function handler(
     // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
     const chat = new ChatOpenAI({ temperature: 0, modelName: gptModelName });
 
-    const promptStr = codeType === 'class/interface' ? CLASS_PROMPT : METHOD_PROMPT;
+    const classPrompt = await readPromptFromGithub('code_to_doc_class');
+    const methodPrompt = await readPromptFromGithub('code_to_doc_method');
+    const promptStr = codeType === 'class/interface' ? classPrompt : methodPrompt;
     const chatPrompt = new PromptTemplate({
       template: promptStr,
       inputVariables: ["language", "code", "programming_language"],

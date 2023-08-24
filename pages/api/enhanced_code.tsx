@@ -6,6 +6,7 @@ import {
 } from "langchain/prompts";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
+import readPromptFromGithub from "utils/prompt_helper"
 
 const SYSTEM_PROMPT = `
 你是一个资深软件工程师，我会给你一段代码，请逐步分析代码的逻辑功能，在保证逻辑功能一致的前提下请按统一风格对代码命名和排版进行优化，同时基于code as doc原理尽可能将代码改得简单易理解。
@@ -86,11 +87,13 @@ export default async function handler(
   const sanitizedContent = content.trim().replaceAll('\n', ' ');
 
   try {
+    const systemPrompt = await readPromptFromGithub('enchanced_code_system');
+    const userPrompt = await readPromptFromGithub('enchanced_code_user');
     // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
     const chat = new ChatOpenAI({ temperature: 0 });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(SYSTEM_PROMPT),
-      HumanMessagePromptTemplate.fromTemplate(USER_PROMPT),
+      SystemMessagePromptTemplate.fromTemplate(systemPrompt),
+      HumanMessagePromptTemplate.fromTemplate(userPrompt),
     ]);
     const chainB = new LLMChain({
       prompt: chatPrompt,
