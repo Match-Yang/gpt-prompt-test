@@ -93,7 +93,7 @@ export default async function handler(
     // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
     const chat = new ChatOpenAI({ temperature: 0 });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(SYSTEM_PROMPT),
+      SystemMessagePromptTemplate.fromTemplate("请帮我优化代码"),
       HumanMessagePromptTemplate.fromTemplate(USER_PROMPT),
     ]);
     const chainB = new LLMChain({
