@@ -46,7 +46,7 @@ export default function EnhancedCode() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          content
+          code: content
         }),
       });
       const data = await response.json();

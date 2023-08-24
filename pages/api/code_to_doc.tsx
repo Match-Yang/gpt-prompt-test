@@ -54,11 +54,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { content, language, programmingLanguage, codeType } = req.body;
+  const { content, language, programming_language, code_type } = req.body;
 
   console.log('language:', language);
   console.log('content:', content);
-  console.log('codeType:', codeType);
+  console.log('codeType:', code_type);
 
   //only accept post requests
   if (req.method !== 'POST') {
@@ -79,7 +79,7 @@ export default async function handler(
     // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
     const chat = new ChatOpenAI({ temperature: 0, modelName: gptModelName });
 
-    const promptStr = codeType === 'class/interface' ? CLASS_PROMPT : METHOD_PROMPT;
+    const promptStr = code_type === 'class/interface' ? CLASS_PROMPT : METHOD_PROMPT;
     const chatPrompt = new PromptTemplate({
       template: promptStr,
       inputVariables: ["language", "code", "programming_language"],
@@ -93,7 +93,7 @@ export default async function handler(
 
     const response = await chainB.call({
       language,
-      programming_language: programmingLanguage,
+      programming_language,
       code: sanitizedContent,
       // messages: [systemMessage]
     });

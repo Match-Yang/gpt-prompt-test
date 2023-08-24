@@ -66,7 +66,7 @@ Rewrote the implementation of reverse_string using a more concise and efficient 
 `;
 const USER_PROMPT = `
 Question:
-{original_code}
+{code}
 
 Answer:
 `
@@ -75,9 +75,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { content } = req.body;
+  const { code } = req.body;
 
-  console.log('content', content);
+  console.log('content', code);
 
   //only accept post requests
   if (req.method !== 'POST') {
@@ -85,7 +85,7 @@ export default async function handler(
     return;
   }
 
-  if (!content) {
+  if (!code) {
     return res.status(400).json({ message: 'No content in the request' });
   }
 
@@ -103,7 +103,7 @@ export default async function handler(
 
     console.log("Begin call chanin......")
     const response = await chainB.call({
-      original_code: content,
+      code,
     });
     console.log("End call chanin......")
 

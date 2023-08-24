@@ -72,7 +72,7 @@ with open(filename, 'wb') as file:
 `
 const USER_PROMPT = `
 Question: Please rewrite the following code using {programming_language}.
-{original_code}
+{code}
 
 Answer:
 `
@@ -81,10 +81,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { original_code, programming_language } = req.body;
+  const { code, programming_language } = req.body;
 
   console.log('programming_language:', programming_language);
-  console.log('original_code:', original_code);
+  console.log('original_code:', code);
 
   //only accept post requests
   if (req.method !== 'POST') {
@@ -92,7 +92,7 @@ export default async function handler(
     return;
   }
 
-  if (!original_code) {
+  if (!code) {
     return res.status(400).json({ message: 'No content in the request' });
   }
 
@@ -109,7 +109,7 @@ export default async function handler(
     });
 
     const response = await chainB.call({
-      original_code,
+      code,
       programming_language,
     });
 

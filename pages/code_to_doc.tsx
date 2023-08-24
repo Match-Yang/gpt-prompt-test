@@ -80,8 +80,8 @@ export default function TranslateCode() {
                 body: JSON.stringify({
                     content,
                     language: targetLanguage,
-                    programmingLanguage,
-                    codeType,
+                    programming_language: programmingLanguage,
+                    code_type: codeType,
                 }),
             });
             const data = await response.json();

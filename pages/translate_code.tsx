@@ -66,7 +66,7 @@ export default function TranslateCode() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    original_code: content,
+                    code: content,
                     programming_language: targetLanguage,
                 }),
             });
