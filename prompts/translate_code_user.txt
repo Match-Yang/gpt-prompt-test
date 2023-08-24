@@ -1,4 +1,0 @@
-Question: Please rewrite the following code using {programming_language}.
-{original_code}
-
-Answer:

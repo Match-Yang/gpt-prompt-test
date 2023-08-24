@@ -1,9 +1,0 @@
-As a professional tech writer, your task is to create an outline for an English documentation about {more_info}. The documentation should be concise and suitable for beginners to read, while also targeting {target_reader_type} as the primary audience.
-
-The output should only include the title without anything else. Please format the outline using the following structure:
-#Heading 1
-##Heading 2
-
-Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand. It should cover the necessary topics and provide a comprehensive {doc_type}, and how {target_reader_type} can use it effectively in their projects.
-
-Please note that your outline should be flexible enough to allow for various relevant and creative headings and subheadings.
