@@ -6,6 +6,7 @@ import {
 } from "langchain/prompts";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
+import { ConsoleCallbackHandler } from "langchain/callbacks";
 
 const USER_PROMPT = `
 As a professional tech writer, your task is to review the following text and revise it to be longer for more details without changing its meaning and tone. Please ensure that the character count of the result is approximately 1.5 times the length of the original content.
@@ -35,10 +36,15 @@ export default async function handler(
         const chatPrompt = new PromptTemplate({
             template: USER_PROMPT,
             inputVariables: ["content"],
-          });
+        });
+        const handler = new ConsoleCallbackHandler();
+        handler.handleChainError = async (error: Error, runID: string) => {
+            console.log('>>>>>>>>>>>>>>>>>>>>>>error:', error);
+        }
         const chainB = new LLMChain({
             prompt: chatPrompt,
             llm: chat,
+            callbacks: [handler]
         });
 
 
