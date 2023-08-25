@@ -27,6 +27,7 @@ export default async function handler(
     req: NextApiRequest,
 ) {
     const { content } = req.body;
+    console.log(`make_longer: [content: ${content}]`)
 
     //only accept post requests
     if (req.method !== 'POST') {
