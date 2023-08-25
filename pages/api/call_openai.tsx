@@ -276,7 +276,7 @@ export default async function handler(
     req: NextRequest,
 ) {
     const body = await req.json()
-    console.log(`Call OpenAI: [body: ${body}]`)
+    console.log(`Call OpenAI: [body: ${JSON.stringify(body)}]`)
     const parameters = generageOpenAIParameters(body)
 
     //only accept post requests
