@@ -7,7 +7,7 @@ import {
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { ConsoleCallbackHandler } from "langchain/callbacks";
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
 const USER_PROMPT = `
 As a professional tech writer, your task is to review the following text and revise it to be longer for more details without changing its meaning and tone. Please ensure that the character count of the result is approximately 1.5 times the length of the original content.
@@ -24,10 +24,11 @@ export const config = {
   };
 
 export default async function handler(
-    req: NextApiRequest,
+    req: NextRequest,
 ) {
-    const { content } = req.body;
-    console.log(`make_longer: [content: ${req.body}]`)
+    const body = await req.json()
+    const content = body.content;
+    console.log(`make_longer: [content: ${body}]`)
 
     //only accept post requests
     if (req.method !== 'POST') {
