@@ -289,8 +289,7 @@ export default async function handler(
         const llm = new OpenAI({ temperature: parameters.temperature, modelName: parameters.moduleName, callbacks: [handler] });
         const prompt = PromptTemplate.fromTemplate(parameters.prompt);
         const chain = new LLMChain({ prompt, llm, callbacks: [handler] });
-        // const response = await chain.call(parameters.parameters);
-        const response = ""
+        const response = await chain.call(parameters.parameters);
 
         return NextResponse.json(response, {status: 200});
     } catch (error: any) {
