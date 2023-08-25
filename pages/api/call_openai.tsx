@@ -157,6 +157,17 @@ Your outline should provide a clear and logical structure for the documentation,
 
 Please note that your outline should be flexible enough to allow for various relevant and creative headings and subheadings.
 `
+const PROMPT_GENERATE_OUTLINE_WITHOUT_MORE_INFO = `
+As a professional tech writer, your task is to create an outline for an English documentation. The documentation should be concise and suitable for beginners to read, while also targeting {target_reader_type} as the primary audience.
+
+The output should only include the title without anything else. Please format the outline using the following structure:
+#Heading 1
+##Heading 2
+
+Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand. It should cover the necessary topics and provide a comprehensive {doc_type}, and how {target_reader_type} can use it effectively in their projects.
+
+Please note that your outline should be flexible enough to allow for various relevant and creative headings and subheadings.
+`
 const PROMPT_IMPROVE_WRITING = `
 You are a professional tech writer, your task is to improve content in a more professional tone and Make it concise and easy-to-understand for beginners. 
 
@@ -250,7 +261,7 @@ Content:
 Answer:
 `
 
-const PROMPT_FUNCTION_TYPE_MAP : { [key: string]: string }= {
+const PROMPT_FUNCTION_TYPE_MAP: { [key: string]: string } = {
     'code_to_doc_class': PROMPT_CODE_TO_DOC_CLASS,
     'code_to_doc_function': PROMPT_CODE_TO_DOC_FUNCTION,
     'enhance_code': PROMPT_ENHANCE_CODE,
@@ -282,7 +293,7 @@ export default async function handler(
 
     //only accept post requests
     if (req.method !== 'POST') {
-        return NextResponse.json({error: 'Method not allowed'}, {status: 405});
+        return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
     }
 
     try {
@@ -295,29 +306,33 @@ export default async function handler(
         const chain = new LLMChain({ prompt, llm, callbacks: [handler] });
         const response = await chain.call(parameters.parameters);
 
-        return NextResponse.json(response, {status: 200});
+        return NextResponse.json(response, { status: 200 });
     } catch (error: any) {
         console.log('error', error);
-        return NextResponse.json({error: error.message || 'Something went wrong'}, {status: 500});
+        return NextResponse.json({ error: error.message || 'Something went wrong' }, { status: 500 });
     }
 }
 
 interface PageParams {
     function_type: string;
     parameters: any;
-  }
+}
 
 function generageOpenAIParameters(reqBody: PageParams) {
-    let openAIParameters = {temperature: 0.5, moduleName: 'gpt-3.5-turbo', prompt: '', parameters: {}}
-    const {function_type, parameters} = reqBody
+    let openAIParameters = { temperature: 0.5, moduleName: 'gpt-3.5-turbo', prompt: '', parameters: {} }
+    const { function_type, parameters } = reqBody
     let prompt = PROMPT_FUNCTION_TYPE_MAP[function_type]
     if (function_type === 'code_to_doc') {
-        if ( parameters['code'].length > 2500) {
+        if (parameters['code'].length > 2500) {
             openAIParameters.moduleName = 'gpt-3.5-turbo-16k'
         }
         prompt = parameters['code_type'] === 'class/interface' ? PROMPT_CODE_TO_DOC_CLASS : PROMPT_CODE_TO_DOC_FUNCTION
     } else if (function_type === 'translate_code' || function_type === 'code_to_doc' || function_type === 'enhance_code' || function_type === 'explain_code') {
         openAIParameters.temperature = 0;
+    } else if (function_type === 'generate_outline') {
+        if (!parameters['more_info']) {
+            prompt = PROMPT_GENERATE_OUTLINE_WITHOUT_MORE_INFO
+        }
     }
     openAIParameters.prompt = prompt
     openAIParameters.parameters = parameters
