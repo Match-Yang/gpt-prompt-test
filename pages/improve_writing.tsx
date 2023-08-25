@@ -34,6 +34,7 @@ export default function TranslateCode() {
         }
 
         const content = query.trim();
+        console.log(`PAGE: ${improveType} CONTENT: ${content}`)
 
         setLoading(true);
 
