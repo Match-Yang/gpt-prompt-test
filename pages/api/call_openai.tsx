@@ -278,6 +278,7 @@ export default async function handler(
     const body = await req.json()
     console.log(`Call OpenAI: [body: ${JSON.stringify(body)}]`)
     const parameters = generageOpenAIParameters(body)
+    console.log(`Call OpenAI: [parameters: ${JSON.stringify(parameters)}]`)
 
     //only accept post requests
     if (req.method !== 'POST') {
@@ -286,6 +287,9 @@ export default async function handler(
 
     try {
         const handler = new ConsoleCallbackHandler();
+        handler.handleChainError = async (error: Error, runID: string) => {
+            console.log('LLMChain error:', error);
+        }
         const llm = new OpenAI({ temperature: parameters.temperature, modelName: parameters.moduleName, callbacks: [handler] });
         const prompt = PromptTemplate.fromTemplate(parameters.prompt);
         const chain = new LLMChain({ prompt, llm, callbacks: [handler] });
