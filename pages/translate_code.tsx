@@ -60,14 +60,17 @@ export default function TranslateCode() {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/translate_code', {
+            const response = await fetch('/api/call_openai', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    code: content,
-                    programming_language: targetLanguage,
+                    function_type: "translate_code",
+                    parameters: {
+                        code: content,
+                        programming_language: targetLanguage,
+                    }
                 }),
             });
             const data = await response.json();

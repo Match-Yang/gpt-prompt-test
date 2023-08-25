@@ -38,15 +38,18 @@ export default function GenerateDir() {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/generate_outline', {
+            const response = await fetch('/api/call_openai', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    doc_type: docType,
-                    target_reader_type: targetReaderType.trim(),
-                    more_info: moreInfo.trim(),
+                    function_type: 'generate_dir',
+                    parameters: {
+                        doc_type: docType,
+                        target_reader_type: targetReaderType.trim(),
+                        more_info: moreInfo.trim(),
+                    }
                 }),
             });
             const data = await response.json();

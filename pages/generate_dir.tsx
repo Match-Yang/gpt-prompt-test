@@ -32,15 +32,18 @@ export default function GenerateDir() {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/generate_dir', {
+            const response = await fetch('/api/call_openai', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    doc_type: docType,
-                    target_reader_type: targetReaderType.trim(),
-                    doc_desc: docDes.trim(),
+                    function_type: 'generate_dir',
+                    parameters: {
+                        doc_type: docType,
+                        target_reader_type: targetReaderType.trim(),
+                        doc_desc: docDes.trim(),
+                    }
                 }),
             });
             const data = await response.json();
@@ -65,7 +68,7 @@ export default function GenerateDir() {
             <div className="mx-auto flex flex-col gap-4">
                 <main className={styles.main}>
                     <div className={styles.center}>
-                        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column',  }}>
+                        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', }}>
                             <Dropdown
                                 className={styles.language_options}
                                 options={DOCTYPES}
