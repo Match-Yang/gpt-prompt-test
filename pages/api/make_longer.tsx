@@ -18,6 +18,8 @@ Content:
 Answer:
 `;
 
+// edge functions has longer execution time than serverless functions to avoid call openai timeout
+// https://vercel.com/docs/edge-network/regions#region-list
 export const config = {
     runtime: 'edge',
     regions: ['iad1', 'sfo1', 'hnd1'],
@@ -38,11 +40,7 @@ export default async function handler(
     try {
         // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
         const chat = new ChatOpenAI({ temperature: 0.5, modelName: 'gpt-3.5-turbo' });
-
-        const chatPrompt = new PromptTemplate({
-            template: USER_PROMPT,
-            inputVariables: ["content"],
-        });
+        const chatPrompt = PromptTemplate.fromTemplate(USER_PROMPT);
         const handler = new ConsoleCallbackHandler();
         handler.handleChainError = async (error: Error, runID: string) => {
             console.log('LLMChain error:', error);
@@ -52,8 +50,6 @@ export default async function handler(
             llm: chat,
             callbacks: [handler]
         });
-
-
         const response = await chainB.call({
             content,
         });
