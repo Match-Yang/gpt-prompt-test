@@ -44,7 +44,7 @@ export default function GenerateDir() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    function_type: 'generate_dir',
+                    function_type: 'generate_outline',
                     parameters: {
                         doc_type: docType,
                         target_reader_type: targetReaderType.trim(),

@@ -251,17 +251,17 @@ Answer:
 `
 
 const PROMPT_FUNCTION_TYPE_MAP : { [key: string]: string }= {
-    'make_longer': PROMPT_MAKE_LONGER,
     'code_to_doc_class': PROMPT_CODE_TO_DOC_CLASS,
     'code_to_doc_function': PROMPT_CODE_TO_DOC_FUNCTION,
     'enhance_code': PROMPT_ENHANCE_CODE,
     'explain_code': PROMPT_EXPLAIN_CODE,
+    'translate_code': PROMPT_TRANSLATE_CODE,
     'fix_spelling_and_grammar': PROMPT_FIX_SPELLING_AND_GRAMMAR,
     'generate_dir': PROMPT_GENERATE_DIR,
     'generate_outline': PROMPT_GENERATE_OUTLINE,
     'improve_writing': PROMPT_IMPROVE_WRITING,
     'make_shorter': PROMPT_MAKE_SHORTER,
-    'translate_code': PROMPT_TRANSLATE_CODE,
+    'make_longer': PROMPT_MAKE_LONGER,
     'translate': PROMPT_TRANSLATE,
 }
 
@@ -270,7 +270,7 @@ const PROMPT_FUNCTION_TYPE_MAP : { [key: string]: string }= {
 export const config = {
     runtime: 'edge',
     regions: ['iad1', 'sfo1', 'hnd1'],
-  };
+};
 
 export default async function handler(
     req: NextRequest,
@@ -289,7 +289,8 @@ export default async function handler(
         const llm = new OpenAI({ temperature: parameters.temperature, modelName: parameters.moduleName, callbacks: [handler] });
         const prompt = PromptTemplate.fromTemplate(parameters.prompt);
         const chain = new LLMChain({ prompt, llm, callbacks: [handler] });
-        const response = await chain.call(parameters.parameters);
+        // const response = await chain.call(parameters.parameters);
+        const response = ""
 
         return NextResponse.json(response, {status: 200});
     } catch (error: any) {

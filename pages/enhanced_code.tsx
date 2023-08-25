@@ -46,7 +46,7 @@ export default function EnhancedCode() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          function_type: 'enhanced_code',
+          function_type: 'enhance_code',
           parameters: {
             code: content,
           }
