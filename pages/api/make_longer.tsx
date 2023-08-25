@@ -7,6 +7,7 @@ import {
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { ConsoleCallbackHandler } from "langchain/callbacks";
+import { NextResponse } from 'next/server';
 
 const USER_PROMPT = `
 As a professional tech writer, your task is to review the following text and revise it to be longer for more details without changing its meaning and tone. Please ensure that the character count of the result is approximately 1.5 times the length of the original content.
@@ -24,14 +25,12 @@ export const config = {
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse,
 ) {
     const { content } = req.body;
 
     //only accept post requests
     if (req.method !== 'POST') {
-        res.status(405).json({ error: 'Method not allowed' });
-        return;
+        return NextResponse.json({error: 'Method not allowed'}, {status: 405});
     }
 
     try {
@@ -44,7 +43,7 @@ export default async function handler(
         });
         const handler = new ConsoleCallbackHandler();
         handler.handleChainError = async (error: Error, runID: string) => {
-            console.log('>>>>>>>>>>>>>>>>>>>>>>error:', error);
+            console.log('LLMChain error:', error);
         }
         const chainB = new LLMChain({
             prompt: chatPrompt,
@@ -58,9 +57,9 @@ export default async function handler(
         });
 
         console.log('response', response);
-        res.status(200).json(response);
+        return NextResponse.json(response, {status: 200});
     } catch (error: any) {
         console.log('error', error);
-        res.status(500).json({ error: error.message || 'Something went wrong' });
+        return NextResponse.json({error: error.message || 'Something went wrong'}, {status: 500});
     }
 }
