@@ -129,6 +129,13 @@ Question:
 Answer:
 `
 const PROMPT_FIX_SPELLING_AND_GRAMMAR = `
+As a professional tech writer, your task is to review the following text for any spelling and grammar errors, and provide revised text if errors are found. If no errors are found, please respond with "The provided text is free of spelling and grammar errors."
+Please ensure that your revisions are clear, concise, and accurately address any identified spelling and grammar errors in the original text.
+
+Text to review: 
+{content}
+
+Answer:
 `
 const PROMPT_GENERATE_DIR = `
 You are a professional documentation engineer, and your task is to create a documentation website. I will provide you with a brief description of the document's topic, its type, and the intended audience.
