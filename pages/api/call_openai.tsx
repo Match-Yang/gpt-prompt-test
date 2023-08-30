@@ -10,7 +10,8 @@ import { NextResponse, NextRequest } from 'next/server';
 
 const PROMPT_MAKE_LONGER = `
 As a professional tech writer, your task is to review the following text and revise it to be longer for more details without changing its meaning and tone. Please ensure that the character count of the result is approximately 1.5 times the length of the original content.
-
+What I'm giving you is a piece of Markdown text. Please process and return the results in the original format. Please only optimize the main text and keep the title as it is.
+What language is the content I gave you, and you will give me the answer in what language.
 Content: 
 {content}
 
@@ -131,6 +132,8 @@ Answer:
 const PROMPT_FIX_SPELLING_AND_GRAMMAR = `
 As a professional tech writer, your task is to review the following text for any spelling and grammar errors, and provide revised text if errors are found. If no errors are found, please respond with "The provided text is free of spelling and grammar errors."
 Please ensure that your revisions are clear, concise, and accurately address any identified spelling and grammar errors in the original text.
+What I'm giving you is a piece of Markdown text. Please process and return the results in the original format. Please only optimize the main text and keep the title as it is.
+What language is the content I gave you, and you will give me the answer in what language.
 
 Text to review: 
 {content}
@@ -146,7 +149,7 @@ Question:
 The document's topic is [Payment SDK Introduction], the document type is [Development Documentation], and it is targeted towards [Beginner Developers].
 
 Answer:
-{{"name": "Introduction","type": "folder","path": "Introduction","toc": [{{"name": "Getting Started","type": "file","path": "Introduction/Getting Started","toc": []}}]}}
+{{"name": "Introduction","type": "folder","path": "Introduction","children": [{{"name": "Getting Started","type": "file","path": "Introduction/Getting Started","children": []}}]}}
 
 Question: 
 The document's topic is [{doc_desc}], the document type is [{doc_type}], and it is targeted towards [{target_reader_type}].
@@ -177,6 +180,8 @@ Please note that your outline should be flexible enough to allow for various rel
 `
 const PROMPT_IMPROVE_WRITING = `
 You are a professional tech writer, your task is to improve content in a more professional tone and Make it concise and easy-to-understand for beginners. 
+What I'm giving you is a piece of Markdown text. Please process and return the results in the original format. Please only optimize the main text and keep the title as it is.
+What language is the content I gave you, and you will give me the answer in what language.
 
 Content:
 {content}
@@ -185,6 +190,8 @@ Answer:
 `
 const PROMPT_MAKE_SHORTER = `
 As a professional tech writer, your task is to review the following text and revise it to be shorter without changing its meaning and tone. 
+What I'm giving you is a piece of Markdown text. Please process and return the results in the original format. Please only optimize the main text and keep the title as it is.
+What language is the content I gave you, and you will give me the answer in what language.
 
 Content: 
 {content}
