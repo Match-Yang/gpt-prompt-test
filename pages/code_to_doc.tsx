@@ -41,6 +41,12 @@ const CODE_TYPE = [
     "class/interface",
     "method/callback"
 ]
+const DOC_TYPE = [
+    "API explanation",
+    "Feature explanation",
+    "Quick start",
+    "Tutorial"
+]
 
 export default function TranslateCode() {
     const [query, setQuery] = useState<string>('');
@@ -50,6 +56,7 @@ export default function TranslateCode() {
     const [targetLanguage, setTargetLanguage] = useState<string>('English');
     const [programmingLanguage, setProgrammingLanguage] = useState<string>('');
     const [codeType, setCodeType] = useState<string>('class/interface');
+    const [docType, setDocType] = useState<string>('API explanation');
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -84,6 +91,7 @@ export default function TranslateCode() {
                         language: targetLanguage,
                         programming_language: programmingLanguage,
                         code_type: codeType,
+                        doc_type: docType
                     }
                 }),
             });
@@ -143,6 +151,10 @@ export default function TranslateCode() {
                             className={styles.language_options}
                             options={CODE_TYPE}
                             onOptionChange={(option: string) => { setCodeType(option) }} />
+                        <Dropdown
+                            className={styles.language_options}
+                            options={DOC_TYPE}
+                            onOptionChange={(option: string) => { setDocType(option) }} />
 
                         <button
                             type="button"
