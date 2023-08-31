@@ -9,7 +9,7 @@ import { ConsoleCallbackHandler } from "langchain/callbacks";
 import { NextResponse, NextRequest } from 'next/server';
 
 const PROMPT_CODE_TO_DOC_CLASS = `
-You are a seasoned documentation engineer. Please write an interface document for the given code. The document should include all the classes, interfaces, structs, enums, methods, and properties involved in the code. The document should be written in Markdown format and should be aesthetically pleasing. All headings must start with the "#" symbol, such as "# MyClass". Please do not use ordered lists to list properties and method names at the same level.
+You are a seasoned documentation engineer. The document is for {doc_type}. Please write an interface document for the given code. The document should include all the classes, interfaces, structs, enums, methods, and properties involved in the code. The document should be written in Markdown format and should be aesthetically pleasing. All headings must start with the "#" symbol, such as "# MyClass". Please do not use ordered lists to list properties and method names at the same level.
 
 If it is an object-oriented language like C++, Java, Kotlin, Objective-C, C#, TypeScript, or Python, please generate the document according to the following outline and requirements.
 
@@ -37,7 +37,7 @@ Question: This is a {programming_language} code. Please write an interface docum
 Answer:
 `
 const PROMPT_CODE_TO_DOC_FUNCTION = `
-You are a senior documentation engineer. Please write an interface document for the given code.
+You are a senior documentation engineer. The document is for {doc_type}. Please write an interface document for the given code.
 The document should be written in Markdown format and should be aesthetically pleasing. Method names should be represented as third-level headings (###), and the method prototypes should be enclosed in three consecutive backticks. All parameter descriptions must include the type and should be presented in a table format.
 Methods must include a code block for the method prototype.
 The method descriptions should be written in the following order: method name, method prototype, method description, parameter description, return value.
@@ -48,6 +48,12 @@ Question: This is a {programming_language} code. Please write an interface docum
 {code}
 
 Answer:
+`
+const PROMPT_CODE_TO_DOC_GENERAL = `
+Your task as a professional tech writer is to create comprehensive documentation in Markdown format for the displayed {doc_type} code below. The target audience for this documentation is beginner developers, so it should be concise, easy to understand, and follow the Google writing style guidelines.
+Please ensure that you provide clear explanations of the functionality of the code and how to use it by using appropriate headings starting with "#Heading" for each section. The documentation should include corresponding code examples where necessary to illustrate the explanations.
+Please write document for the code below using {language}. The code provided is written in {programming_language}:
+{code}
 `
 const PROMPT_ENHANCE_CODE = `
 You are a seasoned software engineer. I will provide you with a piece of code, and please analyze the logical functionality of the code step by step. While ensuring consistent logical functionality, please optimize the code naming and formatting in a unified style. Additionally, based on the principle of "code as documentation," simplify the code as much as possible for better understanding.
@@ -123,7 +129,7 @@ Answer:
 const PROMPT_GENERATE_DIR = `
 You are a professional documentation engineer, and your task is to create a documentation website. I will provide you with a brief description of the document's topic, its type, and the intended audience.
 Please generate a directory tree suitable for this documentation website based on the given information. Generate the directory tree according to the specific details, providing as much detail as possible. The directory tree should have a minimum of two levels and a maximum of three levels, with the final level being the files. Please include at least three top-level directories. All names should be in English.
-Return the result to me in JSON format. Here is an example of the JSON format:
+Return the result to me in JSON format.Please make sure the JSON data format is completely correct. Here is an example of the JSON format:
 
 Question:
 The document's topic is [Payment SDK Introduction], the document type is [Development Documentation], and it is targeted towards [Beginner Developers].
@@ -340,7 +346,11 @@ function generageOpenAIParameters(reqBody: PageParams) {
         if (parameters['code'].length > 2500) {
             openAIParameters.moduleName = 'gpt-3.5-turbo-16k'
         }
-        prompt = parameters['code_type'] === 'class/interface' ? PROMPT_CODE_TO_DOC_CLASS : PROMPT_CODE_TO_DOC_FUNCTION
+        if (parameters['doc_type'] === 'API explanation') {
+            prompt = parameters['code_type'] === 'class/interface' ? PROMPT_CODE_TO_DOC_CLASS : PROMPT_CODE_TO_DOC_FUNCTION
+        } else {
+            prompt = PROMPT_CODE_TO_DOC_GENERAL
+        }
     } else if (function_type === 'translate_code' || function_type === 'code_to_doc' || function_type === 'enhance_code' || function_type === 'explain_code') {
         openAIParameters.temperature = 0;
     } else if (function_type === 'generate_outline') {
