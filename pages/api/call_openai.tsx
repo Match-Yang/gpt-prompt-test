@@ -175,38 +175,12 @@ Question:
 The document type is Overview and targeting Developers as the primary audience.
 
 Answer:
-# Introduction
-## What is a payment SDK?
-## Overview of the documentation
-# Getting Started
-## Installation
-## Setting up an account
-## Obtaining API keys
-# Basic Usage
-## Initializing the SDK
-## Processing a payment
-## Handling errors
-# Advanced Usage
-## Customizing payment options
-## Implementing recurring payments
-## Integrating with other APIs
-# Security and Compliance
-## Encryption and data protection
-## PCI-DSS compliance
-## Handling sensitive information
-# Troubleshooting
-## Common issues and solutions
-## Debugging and error handling
-# API Reference
-## Payment SDK methods and parameters
-## Examples and code snippets
-# Best Practices
-## Optimizing performance
-## Ensuring user experience
-## Testing and quality assurance
-# Conclusion
-## Summary of key points
-## Next steps and resources
+# Title1
+## Title1_1
+## Title1_2
+## Title1_...
+# Title2
+## Title2_...
 
 Question:
 The document type is {doc_type} and targeting {target_reader_type} as the primary audience.
