@@ -150,44 +150,17 @@ Answer:
 const PROMPT_GENERATE_OUTLINE = `
 You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please write an appropriate English outline from the most professional perspective based on the information given in the question.
 Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand.
-The sample questions and answers I give you are just to give you a reference. Please do not copy the content here.
 
 Question:
 This is a document about Payment SDK. The document type is Overview and targeting Developers as the primary audience.
 
 Answer:
-# Introduction
-## What is a payment SDK?
-## Overview of the documentation
-# Getting Started
-## Installation
-## Setting up an account
-## Obtaining API keys
-# Basic Usage
-## Initializing the SDK
-## Processing a payment
-## Handling errors
-# Advanced Usage
-## Customizing payment options
-## Implementing recurring payments
-## Integrating with other APIs
-# Security and Compliance
-## Encryption and data protection
-## PCI-DSS compliance
-## Handling sensitive information
-# Troubleshooting
-## Common issues and solutions
-## Debugging and error handling
-# API Reference
-## Payment SDK methods and parameters
-## Examples and code snippets
-# Best Practices
-## Optimizing performance
-## Ensuring user experience
-## Testing and quality assurance
-# Conclusion
-## Summary of key points
-## Next steps and resources
+# Title1
+## Title1_1
+## Title1_2
+## Title1_...
+# Title2
+## Title2_...
 
 Question:
 This is a document about {more_info}. The document type is {doc_type} and targeting {target_reader_type} as the primary audience.
