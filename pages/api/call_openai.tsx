@@ -148,7 +148,7 @@ The document's topic is [{doc_desc}], the document type is [{doc_type}], and it 
 Answer:
 `
 const PROMPT_GENERATE_OUTLINE = `
-You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please follow the example format and write a suitable English outline based on the given conditions.
+You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please write an appropriate English outline from the most professional perspective based on the information given in the question.
 Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand.
 
 Question:
@@ -194,7 +194,7 @@ This is a document about {more_info}. The document type is {doc_type} and target
 Answer:
 `
 const PROMPT_GENERATE_OUTLINE_WITHOUT_MORE_INFO = `
-You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please follow the example format and write a suitable English outline based on the given conditions.
+You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please write an appropriate English outline from the most professional perspective based on the information given in the question.
 Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand.
 
 Question:
