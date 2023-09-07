@@ -150,6 +150,7 @@ Answer:
 const PROMPT_GENERATE_OUTLINE = `
 You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please write an appropriate English outline from the most professional perspective based on the information given in the question.
 Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand.
+The sample questions and answers I give you are just to give you a reference. Please do not copy the content here.
 
 Question:
 This is a document about Payment SDK. The document type is Overview and targeting Developers as the primary audience.
