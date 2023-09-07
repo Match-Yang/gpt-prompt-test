@@ -10,9 +10,8 @@ import { NextResponse, NextRequest } from 'next/server';
 
 const PROMPT_CODE_TO_DOC_CLASS = `
 You are a seasoned documentation engineer. The document is for {doc_type}. Please write an interface document for the given code. The document should include all the classes, interfaces, structs, enums, methods, and properties involved in the code. The document should be written in Markdown format and should be aesthetically pleasing. All headings must start with the "#" symbol, such as "# MyClass". Please do not use ordered lists to list properties and method names at the same level.
-
+If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 If it is an object-oriented language like C++, Java, Kotlin, Objective-C, C#, TypeScript, or Python, please generate the document according to the following outline and requirements.
-
 If the code represents a complete class or interface, it must include the following outline:
 
 Table of Contents (tree structure, only includes the outline)
@@ -41,8 +40,8 @@ You are a senior documentation engineer. The document is for {doc_type}. Please 
 The document should be written in Markdown format and should be aesthetically pleasing. Method names should be represented as third-level headings (###), and the method prototypes should be enclosed in three consecutive backticks. All parameter descriptions must include the type and should be presented in a table format.
 Methods must include a code block for the method prototype.
 The method descriptions should be written in the following order: method name, method prototype, method description, parameter description, return value.
-
 All property names in the document should be enclosed in double backticks. If it is a multi-line code, it should be enclosed in three backticks.
+If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 
 Question: This is a {programming_language} code. Please write an interface document for the code below using {language}.
 {code}
@@ -51,12 +50,17 @@ Answer:
 `
 const PROMPT_CODE_TO_DOC_GENERAL = `
 Your task as a professional tech writer is to create comprehensive documentation in Markdown format for the displayed {doc_type} code below. The target audience for this documentation is beginner developers, so it should be concise, easy to understand, and follow the Google writing style guidelines.
-Please ensure that you provide clear explanations of the functionality of the code and how to use it by using appropriate headings starting with "#Heading" for each section. The documentation should include corresponding code examples where necessary to illustrate the explanations.
-Please write document for the code below using {language}. The code provided is written in {programming_language}:
+Please ensure that you provide clear explanations of the functionality of the code and how to use it by using appropriate headings starting with "# Heading" for each section. The documentation should include corresponding code examples where necessary to illustrate the explanations.
+If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
+
+Question: Please write document for the code below using {language}. The code provided is written in {programming_language}.
 {code}
+
+Answer:
 `
 const PROMPT_ENHANCE_CODE = `
 You are a seasoned software engineer. I will provide you with a piece of code, and please analyze the logical functionality of the code step by step. While ensuring consistent logical functionality, please optimize the code naming and formatting in a unified style. Additionally, based on the principle of "code as documentation," simplify the code as much as possible for better understanding.
+If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 If the given code is written poorly, you should rewrite it in an expert manner to make the code more concise and efficient.Please summarize the modifications you made in one sentence. Use the separator ">>><<<" to separate the summary from the code with line breaks. Here are two examples:
 
 Question:
@@ -120,6 +124,7 @@ const PROMPT_EXPLAIN_CODE = `
 As a professional tech writer, your task is to create a detailed explanation of the following code in Markdown format. The target audience for this documentation is beginner developers, so the explanation should be written in a {tone} tone.
 The code provided is written in the {programming_language}. Please provide a clear explanation of the code's functionality and how to use it. Please explain any key concepts or techniques used in the code, and provide examples or additional information to help beginner developers understand the code better.
 Your explanation should be structured and easy to follow, with step-by-step instructions and clear explanations of each part of the code. Consider using headings, bullet points, code snippets, and other Markdown formatting to make the documentation more readable and visually appealing for the target audience.
+If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 
 Question:
 {code}
@@ -128,14 +133,14 @@ Answer:
 `
 const PROMPT_GENERATE_DIR = `
 You are a professional documentation engineer, and your task is to create a documentation website. I will provide you with a brief description of the document's topic, its type, and the intended audience.
-Please generate a directory tree suitable for this documentation website based on the given information. Generate the directory tree according to the specific details, providing as much detail as possible. The directory tree should have a minimum of two levels and a maximum of three levels, with the final level being the files. Please include at least three top-level directories. All names should be in English.
+Please generate a directory tree suitable for this documentation website based on the given information. Generate the directory tree according to the specific details, providing as much detail as possible. The directory tree should consist of two levels. The first level should be of the folder type, and the second level should be of the file type. All names should be in English.
 Return the result to me in JSON format.Please make sure the JSON data format is completely correct. Here is an example of the JSON format:
 
 Question:
 The document's topic is [Payment SDK Introduction], the document type is [Development Documentation], and it is targeted towards [Beginner Developers].
 
 Answer:
-{{"name": "Introduction","type": "folder","path": "Introduction","children": [{{"name": "Getting Started","type": "file","path": "Introduction/Getting Started","children": []}}]}}
+{{"name":"Payment SDK Introduction","type":"folder","path":"Payment SDK Introduction","children":[{{"name":"Overview","type":"folder","path":"Payment SDK Introduction/Overview","children":[{{"name":"What is a Payment SDK","type":"file","path":"Payment SDK Introduction/Overview/What is a Payment SDK","children":[]}},{{"name":"Why Use a Payment SDK","type":"file","path":"Payment SDK Introduction/Overview/Why Use a Payment SDK","children":[]}}]}},{{"name":"Getting Started","type":"folder","path":"Payment SDK Introduction/Getting Started","children":[{{"name":"Installation","type":"file","path":"Payment SDK Introduction/Getting Started/Installation","children":[]}},{{"name":"Configuration","type":"file","path":"Payment SDK Introduction/Getting Started/Configuration","children":[]}}]}},{{"name":"Examples","type":"folder","path":"Payment SDK Introduction/Examples","children":[{{"name":"Basic Payment Processing","type":"file","path":"Payment SDK Introduction/Examples/Basic Payment Processing","children":[]}},{{"name":"Advanced Payment Features","type":"file","path":"Payment SDK Introduction/Examples/Advanced Payment Features","children":[]}}]}}]}}
 
 Question: 
 The document's topic is [{doc_desc}], the document type is [{doc_type}], and it is targeted towards [{target_reader_type}].
@@ -143,26 +148,96 @@ The document's topic is [{doc_desc}], the document type is [{doc_type}], and it 
 Answer:
 `
 const PROMPT_GENERATE_OUTLINE = `
-As a professional tech writer, your task is to create an outline for an English documentation about {more_info}. The documentation should be concise and suitable for beginners to read, while also targeting {target_reader_type} as the primary audience.
+You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please follow the example format and write a suitable English outline based on the given conditions.
+Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand.
 
-The output should only include the title without anything else. Please format the outline using the following structure:
-#Heading 1
-##Heading 2
+Question:
+This is a document about Payment SDK. The document type is Overview and targeting Developers as the primary audience.
 
-Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand. It should cover the necessary topics and provide a comprehensive {doc_type}, and how {target_reader_type} can use it effectively in their projects.
+Answer:
+# Introduction
+## What is a payment SDK?
+## Overview of the documentation
+# Getting Started
+## Installation
+## Setting up an account
+## Obtaining API keys
+# Basic Usage
+## Initializing the SDK
+## Processing a payment
+## Handling errors
+# Advanced Usage
+## Customizing payment options
+## Implementing recurring payments
+## Integrating with other APIs
+# Security and Compliance
+## Encryption and data protection
+## PCI-DSS compliance
+## Handling sensitive information
+# Troubleshooting
+## Common issues and solutions
+## Debugging and error handling
+# API Reference
+## Payment SDK methods and parameters
+## Examples and code snippets
+# Best Practices
+## Optimizing performance
+## Ensuring user experience
+## Testing and quality assurance
+# Conclusion
+## Summary of key points
+## Next steps and resources
 
-Please note that your outline should be flexible enough to allow for various relevant and creative headings and subheadings.
+Question:
+This is a document about {more_info}. The document type is {doc_type} and targeting {target_reader_type} as the primary audience.
+
+Answer:
 `
 const PROMPT_GENERATE_OUTLINE_WITHOUT_MORE_INFO = `
-As a professional tech writer, your task is to create an outline for an English documentation. The documentation should be concise and suitable for beginners to read, while also targeting {target_reader_type} as the primary audience.
+You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please follow the example format and write a suitable English outline based on the given conditions.
+Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand.
 
-The output should only include the title without anything else. Please format the outline using the following structure:
-#Heading 1
-##Heading 2
+Question:
+The document type is Overview and targeting Developers as the primary audience.
 
-Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand. It should cover the necessary topics and provide a comprehensive {doc_type}, and how {target_reader_type} can use it effectively in their projects.
+Answer:
+# Introduction
+## What is a payment SDK?
+## Overview of the documentation
+# Getting Started
+## Installation
+## Setting up an account
+## Obtaining API keys
+# Basic Usage
+## Initializing the SDK
+## Processing a payment
+## Handling errors
+# Advanced Usage
+## Customizing payment options
+## Implementing recurring payments
+## Integrating with other APIs
+# Security and Compliance
+## Encryption and data protection
+## PCI-DSS compliance
+## Handling sensitive information
+# Troubleshooting
+## Common issues and solutions
+## Debugging and error handling
+# API Reference
+## Payment SDK methods and parameters
+## Examples and code snippets
+# Best Practices
+## Optimizing performance
+## Ensuring user experience
+## Testing and quality assurance
+# Conclusion
+## Summary of key points
+## Next steps and resources
 
-Please note that your outline should be flexible enough to allow for various relevant and creative headings and subheadings.
+Question:
+The document type is {doc_type} and targeting {target_reader_type} as the primary audience.
+
+Answer:
 `
 const PROMPT_IMPROVE_WRITING = `
 You are a professional tech writer, your task is to improve content in a more professional tone and Make it concise and easy-to-understand for beginners. 
@@ -209,6 +284,7 @@ You are a senior software engineer. I will provide you with a piece of code, and
 Please adhere to the naming conventions of the target language or framework when naming the rewritten code. For example, in Python, the naming convention is lowercase with underscores.
 If the given code is poorly written, you should rewrite it in an expert manner to make the code more concise and efficient.
 Please note that when rewriting the code, do not arbitrarily add extra code logic or modify the meaning or quantity of properties and parameters. Your answer should consist of only the code, without any explanatory text. Here are two examples:
+If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 
 Question: Please rewrite the following code using Go.
 
