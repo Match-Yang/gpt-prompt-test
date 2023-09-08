@@ -9,7 +9,7 @@ import { ConsoleCallbackHandler } from "langchain/callbacks";
 import { NextResponse, NextRequest } from 'next/server';
 
 const PROMPT_CODE_TO_DOC_CLASS = `
-You are a seasoned documentation engineer. The document is for {doc_type}. Please write an interface document for the given code. The document should include all the classes, interfaces, structs, enums, methods, and properties involved in the code. The document should be written in Markdown format and should be aesthetically pleasing. All headings must start with the "#" symbol, such as "# MyClass". Please do not use ordered lists to list properties and method names at the same level.
+You are a seasoned documentation engineer. Please write an interface document for the given code. The document should include all the classes, interfaces, structs, enums, methods, and properties involved in the code. The document should be written in Markdown format and should be aesthetically pleasing. All headings must start with the "#" symbol, such as "# MyClass". Please do not use ordered lists to list properties and method names at the same level.
 If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 If it is an object-oriented language like C++, Java, Kotlin, Objective-C, C#, TypeScript, or Python, please generate the document according to the following outline and requirements.
 If the code represents a complete class or interface, it must include the following outline:
@@ -30,20 +30,20 @@ The documentation should only include the method description. The method descrip
 
 All property names in the document should be enclosed in double backticks. If it is a multi-line code, it should be enclosed in three backticks.
 
-Question: This is a {programming_language} code. Please write an interface document for the code below using {language}.
+Question: The document is for {doc_type}. This is a {programming_language} code. Please write an interface document for the code below using {language}.
 {code}
 
 Answer:
 `
 const PROMPT_CODE_TO_DOC_FUNCTION = `
-You are a senior documentation engineer. The document is for {doc_type}. Please write an interface document for the given code.
+You are a senior documentation engineer. Please write an interface document for the given code.
 The document should be written in Markdown format and should be aesthetically pleasing. Method names should be represented as third-level headings (###), and the method prototypes should be enclosed in three consecutive backticks. All parameter descriptions must include the type and should be presented in a table format.
 Methods must include a code block for the method prototype.
 The method descriptions should be written in the following order: method name, method prototype, method description, parameter description, return value.
 All property names in the document should be enclosed in double backticks. If it is a multi-line code, it should be enclosed in three backticks.
 If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 
-Question: This is a {programming_language} code. Please write an interface document for the code below using {language}.
+Question: The document is for {doc_type}. This is a {programming_language} code. Please write an interface document for the code below using {language}.
 {code}
 
 Answer:
@@ -143,24 +143,14 @@ Answer:
 {{"name":"Payment SDK Introduction","type":"folder","path":"Payment SDK Introduction","children":[{{"name":"Overview","type":"folder","path":"Payment SDK Introduction/Overview","children":[{{"name":"What is a Payment SDK","type":"file","path":"Payment SDK Introduction/Overview/What is a Payment SDK","children":[]}},{{"name":"Why Use a Payment SDK","type":"file","path":"Payment SDK Introduction/Overview/Why Use a Payment SDK","children":[]}}]}},{{"name":"Getting Started","type":"folder","path":"Payment SDK Introduction/Getting Started","children":[{{"name":"Installation","type":"file","path":"Payment SDK Introduction/Getting Started/Installation","children":[]}},{{"name":"Configuration","type":"file","path":"Payment SDK Introduction/Getting Started/Configuration","children":[]}}]}},{{"name":"Examples","type":"folder","path":"Payment SDK Introduction/Examples","children":[{{"name":"Basic Payment Processing","type":"file","path":"Payment SDK Introduction/Examples/Basic Payment Processing","children":[]}},{{"name":"Advanced Payment Features","type":"file","path":"Payment SDK Introduction/Examples/Advanced Payment Features","children":[]}}]}}]}}
 
 Question: 
-The document's topic is [{doc_desc}], the document type is [{doc_type}], and it is targeted towards [{target_reader_type}].
+The document's topic is {doc_desc}, the document type is {doc_type}, and it is targeted towards {target_reader_type}.
 
 Answer:
 `
 const PROMPT_GENERATE_OUTLINE = `
 You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please write an appropriate English outline from the most professional perspective based on the information given in the question.
 Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand.
-
-Question:
-This is a document about Payment SDK. The document type is Overview and targeting Developers as the primary audience.
-
-Answer:
-# Title1
-## Title1_1
-## Title1_2
-## Title1_...
-# Title2
-## Title2_...
+First-level headings and second-level headings should be written in Markdown syntax. For example # Heading1 and ## Heading2. Use bullet lists (e.g. - topic1) under secondary headings to list more detailed topics.
 
 Question:
 This is a document about {more_info}. The document type is {doc_type} and targeting {target_reader_type} as the primary audience.
@@ -170,17 +160,7 @@ Answer:
 const PROMPT_GENERATE_OUTLINE_WITHOUT_MORE_INFO = `
 You are a professional technical writer, and you are very good at writing document outlines suitable for specific types of readers according to different conditions. The outline you write will only contain first-level and second-level headings. Please write an appropriate English outline from the most professional perspective based on the information given in the question.
 Your outline should provide a clear and logical structure for the documentation, organizing the content in a way that makes it easy for beginners to follow and understand.
-
-Question:
-The document type is Overview and targeting Developers as the primary audience.
-
-Answer:
-# Title1
-## Title1_1
-## Title1_2
-## Title1_...
-# Title2
-## Title2_...
+First-level headings and second-level headings should be written in Markdown syntax. For example # Heading1 and ## Heading2. Use bullet lists (e.g. - topic1) under secondary headings to list more detailed topics.
 
 Question:
 The document type is {doc_type} and targeting {target_reader_type} as the primary audience.
