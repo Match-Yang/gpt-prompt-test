@@ -10,7 +10,6 @@ import { NextResponse, NextRequest } from 'next/server';
 
 const PROMPT_CODE_TO_DOC_CLASS = `
 You are a seasoned documentation engineer. Please write an interface document for the given code. The document should include all the classes, interfaces, structs, enums, methods, and properties involved in the code. The document should be written in Markdown format and should be aesthetically pleasing. All headings must start with the "#" symbol, such as "# MyClass". Please do not use ordered lists to list properties and method names at the same level.
-If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 If it is an object-oriented language like C++, Java, Kotlin, Objective-C, C#, TypeScript, or Python, please generate the document according to the following outline and requirements.
 If the code represents a complete class or interface, it must include the following outline:
 
@@ -30,7 +29,15 @@ The documentation should only include the method description. The method descrip
 
 All property names in the document should be enclosed in double backticks. If it is a multi-line code, it should be enclosed in three backticks.
 
-Question: The document is for {doc_type}. This is a {programming_language} code. Please write an interface document for the code below using {language}.
+If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
+
+Question: The document is for Quick Start. The code provided may be written with C++. Please write an interface document for the code below using English.
+code急哦¥¥json_yesC++方法
+
+Answer:
+Invalid code input detected. Please check and re-generate.
+
+Question: The document is for {doc_type}. The code provided may be written with {programming_language}. Please write an interface document for the code below using {language}.
 {code}
 
 Answer:
@@ -43,88 +50,87 @@ The method descriptions should be written in the following order: method name, m
 All property names in the document should be enclosed in double backticks. If it is a multi-line code, it should be enclosed in three backticks.
 If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 
-Question: The document is for {doc_type}. This is a {programming_language} code. Please write an interface document for the code below using {language}.
+Question: The document is for Quick Start. The code provided may be written with C++. Please write an interface document for the code below using English.
+code急哦¥¥json_yesC++方法
+
+Answer:
+Invalid code input detected. Please check and re-generate.
+
+Question: The document is for {doc_type}. The code provided may be written with {programming_language}. Please write an interface document for the code below using {language}.
 {code}
 
 Answer:
 `
 const PROMPT_CODE_TO_DOC_GENERAL = `
 Your task as a professional tech writer is to create comprehensive documentation in Markdown format for the displayed {doc_type} code below. The target audience for this documentation is beginner developers, so it should be concise, easy to understand, and follow the Google writing style guidelines.
-Please ensure that you provide clear explanations of the functionality of the code and how to use it by using appropriate headings starting with "# Heading" for each section. The documentation should include corresponding code examples where necessary to illustrate the explanations.
+Please ensure that you provide clear explanations of the functionality of the code and how to use it by using appropriate headings starting with "# " for each section. The documentation should include corresponding code examples where necessary to illustrate the explanations.
 If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 
-Question: Please write document for the code below using {language}. The code provided is written in {programming_language}.
+Question: Please write document for the code below using English. The code provided may be written in JS.
+code急哦¥¥json_yesC++方法
+
+Answer:
+Invalid code input detected. Please check and re-generate.
+
+Question: Please write document for the code below using {language}. The code provided may be written in {programming_language}.
 {code}
 
 Answer:
 `
 const PROMPT_ENHANCE_CODE = `
-You are a seasoned software engineer. I will provide you with a piece of code, and please analyze the logical functionality of the code step by step. While ensuring consistent logical functionality, please optimize the code naming and formatting in a unified style. Additionally, based on the principle of "code as documentation," simplify the code as much as possible for better understanding.
-If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
+You are a seasoned software engineer. I will provide you with a piece of code, and the provided code has a high probability context is incomplete, and please analyze the logical functionality of the code step by step. While ensuring consistent logical functionality, please optimize the code naming and formatting in a unified style. Additionally, based on the principle of "code as documentation," simplify the code as much as possible for better understanding.
+If upon careful analysis you find that the question does not include any specific code, please reply with the reason. If there are any code snippets included, You will analyze and optimize those code segments.
 If the given code is written poorly, you should rewrite it in an expert manner to make the code more concise and efficient.Please summarize the modifications you made in one sentence. Use the separator ">>><<<" to separate the summary from the code with line breaks. Here are two examples:
+If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
 
-Question:
-def func1(x1,x2):
-    a=x1
-    b=x2
-    c=a+b
-    d=c*10
-    e=[]
-    for i in range(d):
-        e.append(i*2)
-    return e
+Question: The code provided may be written with C++
+code急哦¥¥json_yesC++方法
 
 Answer:
-def sum_and_multiply(x1, x2):
-    # Rename variables to be more descriptive
-    num1 = x1
-    num2 = x2
-
-    # Calculate the sum and multiply it by 10
-    total_sum = num1 + num2
-    multiplied_sum = total_sum * 10
-
-    # Create an empty list to store the results
-    result_list = []
-
-    # Iterate through the range of the multiplied sum
-    for i in range(multiplied_sum):
-        # Append the double of each value to the list
-        result_list.append(i * 2)
-
-    return result_list
+Invalid code input detected. Please check and re-generate.
 >>><<<
-Optimized method and variable names for improved readability.
+Invalid code input detected. Please check and re-generate.
 
-Question:
-def reverse_string(input_str):
-    reversed_str = ''
-    for i in range(len(input_str)-1, -1, -1):
-        reversed_str += input_str[i]
-    return reversed_str
-input_str = 'Hello, World!'
-reversed_str = reverse_string(input_str)
-print(reversed_str)
+Question: The code provided may be written with JS.
+function fun1(inputStr) {{
+    let reversedStr = '';
+    for (let i = inputStr.length - 1; i >= 0; i--) {{
+      reversedStr += inputStr[i];
+    }}
+    return reversedStr;
+}}
+  
+const inputStr = 'Hello, World!';
+const reversedStr = reverseString(inputStr);
+console.log(reversedStr);
 
 Answer:
-def reverse_string(input_str):
-    return input_str[::-1]
-input_str = 'Hello, World!'
-reversed_str = reverse_string(input_str)
-print(reversed_str)
+function reverseString(inputStr) {{
+    return inputStr.split('').reverse().join('');
+}}
+  
+const inputStr = 'Hello, World!';
+const reversedStr = reverseString(inputStr);
+console.log(reversedStr);
 >>><<<
-Rewrote the implementation of reverse_string using a more concise and efficient syntax.
+Use the reverse() method and join('') method of an array to reverse a string, thereby improving efficiency and optimized method names for improved readability.
 
-Question:
+Question: The code provided may be written with {programming_language}. 
 {code}
 
 Answer:
 `
 const PROMPT_EXPLAIN_CODE = `
 As a professional tech writer, your task is to create a detailed explanation of the following code in Markdown format. The target audience for this documentation is beginner developers, so the explanation should be written in a {tone} tone.
-The code provided is written in the {programming_language}. Please provide a clear explanation of the code's functionality and how to use it. Please explain any key concepts or techniques used in the code, and provide examples or additional information to help beginner developers understand the code better.
+The code provided may be written in the {programming_language}. Please provide a clear explanation of the code's functionality and how to use it. Please explain any key concepts or techniques used in the code, and provide examples or additional information to help beginner developers understand the code better.
 Your explanation should be structured and easy to follow, with step-by-step instructions and clear explanations of each part of the code. Consider using headings, bullet points, code snippets, and other Markdown formatting to make the documentation more readable and visually appealing for the target audience.
 If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
+
+Question:
+code急哦¥¥json_yesC++方法
+
+Answer:
+Invalid code input detected. Please check and re-generate.
 
 Question:
 {code}
@@ -213,6 +219,12 @@ Please adhere to the naming conventions of the target language or framework when
 If the given code is poorly written, you should rewrite it in an expert manner to make the code more concise and efficient.
 Please note that when rewriting the code, do not arbitrarily add extra code logic or modify the meaning or quantity of properties and parameters. Your answer should consist of only the code, without any explanatory text. Here are two examples:
 If the content of the question is obviously not code, please answer this prompt directly: Invalid code input detected. Please check and re-generate.
+
+Question: Please rewrite the following code using Python.
+code急哦¥¥json_yesC++方法
+
+Answer:
+Invalid code input detected. Please check and re-generate.
 
 Question: Please rewrite the following code using Go.
 
